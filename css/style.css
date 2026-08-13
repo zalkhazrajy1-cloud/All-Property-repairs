@@ -604,31 +604,6 @@ body.nav-open { overflow: hidden; }
 .contact-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2.5rem, 5vw, 5rem); align-items: start; }
 @media (max-width: 940px) { .contact-grid { grid-template-columns: 1fr; } }
 
-.field { margin-bottom: 1.4rem; }
-.field label {
-  display: block; font-size: 0.76rem; letter-spacing: 0.08em; text-transform: uppercase;
-  font-weight: 600; color: var(--umber); margin-bottom: 0.6rem;
-}
-.field input, .field textarea, .field select {
-  width: 100%; border: 1px solid var(--bone-line); background: var(--bone);
-  padding: 0.9em 1em; font-family: var(--font-body); font-size: 0.95rem; color: var(--ink);
-  border-radius: var(--radius); transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
-}
-.field input:focus, .field textarea:focus, .field select:focus {
-  outline: none; border-color: var(--brass); background: #fffdf8;
-}
-.field textarea { resize: vertical; min-height: 130px; }
-.field-error { color: var(--err); font-size: 0.78rem; margin-top: 0.45rem; display: none; }
-.field.has-error input, .field.has-error textarea, .field.has-error select { border-color: var(--err); }
-.field.has-error .field-error { display: block; }
-
-.form-status {
-  margin-top: 1.4rem; padding: 1em 1.2em; border-radius: var(--radius);
-  font-size: 0.9rem; display: none; align-items: center; gap: 0.7em;
-}
-.form-status.is-success { display: flex; background: rgba(76,107,79,0.1); color: var(--ok); border: 1px solid rgba(76,107,79,0.3); }
-.form-status.is-error { display: flex; background: rgba(140,63,63,0.08); color: var(--err); border: 1px solid rgba(140,63,63,0.3); }
-
 .info-card {
   border: 1px solid var(--bone-line); padding: clamp(1.8rem, 3vw, 2.4rem);
   display: flex; flex-direction: column; gap: 1.6rem; background: var(--bone-dim);
