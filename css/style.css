@@ -377,6 +377,25 @@ body.nav-open { overflow: hidden; }
   mix-blend-mode: overlay;
 }
 .texture-panel .motif { position: absolute; z-index: 1; opacity: 0.9; }
+
+/* Real photography treatment — subtle tonal overlay so photos read as art-directed, not raw stock */
+.figure-photo { position: relative; overflow: hidden; background: var(--ink); }
+.figure-photo img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(0.92) contrast(1.03);
+  transition: transform 0.8s var(--ease);
+}
+.figure-photo::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(160deg, rgba(22,19,17,0.22) 0%, rgba(140,106,63,0.1) 55%, transparent 100%);
+  mix-blend-mode: multiply;
+}
+.figure-photo:hover img { transform: scale(1.045); }
+
+.hero-media img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  filter: saturate(0.85) contrast(1.05) brightness(0.92);
+}
 .texture-panel--bone {
   background: var(--bone-dim);
 }
@@ -463,15 +482,20 @@ body.nav-open { overflow: hidden; }
    --------------------------------------------------------------------- */
 .pillar {
   border: 1px solid var(--bone-line);
-  padding: clamp(1.8rem, 3vw, 2.6rem);
+  padding: 0;
   background: var(--bone);
   transition: border-color 0.4s var(--ease), transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
-  display: flex; flex-direction: column; gap: 1.2rem; height: 100%;
+  display: flex; flex-direction: column; height: 100%; overflow: hidden;
 }
 .pillar:hover {
   border-color: var(--brass);
   transform: translateY(-6px);
   box-shadow: 0 24px 48px -28px rgba(22,19,17,0.35);
+}
+.pillar-img { aspect-ratio: 4/3; }
+.pillar-body {
+  padding: clamp(1.6rem, 3vw, 2.2rem);
+  display: flex; flex-direction: column; gap: 1.1rem; flex: 1;
 }
 .pillar-num {
   font-family: var(--font-display);
