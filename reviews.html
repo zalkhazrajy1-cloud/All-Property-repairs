@@ -50,9 +50,9 @@
   <section class="section" style="padding-top:calc(var(--nav-h) + 3rem);">
     <div class="container reveal">
       <span class="eyebrow">Reviews</span>
-      <h1 style="margin-top:1rem; font-size:clamp(2.2rem,4.6vw,3.6rem); max-width:20ch;">What Adelaide says about Andreas.</h1>
+      <h1 class="hero-reveal" style="margin-top:1rem; font-size:clamp(2.2rem,4.6vw,3.6rem); max-width:20ch;">What Adelaide says about Andreas.</h1>
       <div class="rating-summary" style="margin-top:2rem;">
-        <span class="num">5.0</span>
+        <span class="num" data-count-to="5" data-count-decimals="1">0.0</span>
         <div>
           <span class="stars" aria-hidden="true">
             <svg viewBox="0 0 20 20"><path d="M10 1l2.6 5.9 6.4.6-4.8 4.3 1.4 6.2L10 14.9 4.4 18l1.4-6.2L1 7.5l6.4-.6L10 1z"/></svg>
@@ -197,6 +197,7 @@
           </div>
         </div>
 
+        <div class="carousel-progress"><div class="carousel-progress-bar"></div></div>
         <div class="carousel-controls">
           <div class="carousel-dots" aria-label="Review slides"></div>
           <div class="carousel-arrows">
@@ -212,7 +213,7 @@
     <div class="container cta-band reveal">
       <h2 style="font-size:clamp(1.9rem,3.4vw,2.6rem);">Become the next review.</h2>
       <div style="display:flex; gap:1rem; flex-wrap:wrap;">
-        <a class="btn btn-primary" href="contact.html">Get a Quote <span class="btn-arrow">→</span></a>
+        <a class="btn btn-primary" href="contact.html" data-magnetic>Get a Quote <span class="btn-arrow">→</span></a>
         <a class="btn btn-ghost" href="https://maps.app.goo.gl/VsacdQQxWC1RT7kN8" target="_blank" rel="noopener">View on Google</a>
       </div>
     </div>

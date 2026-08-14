@@ -353,65 +353,79 @@ body.nav-open { overflow: hidden; }
 @keyframes scrollline { 0% { top: -100%; } 60% { top: 100%; } 100% { top: 100%; } }
 
 /* ---------------------------------------------------------------------
-   Texture panels (placeholder imagery — CSS/SVG built, no external assets)
+   Real photography treatment — subtle tonal overlay so photos read as art-directed, not raw stock
    --------------------------------------------------------------------- */
-.texture-panel {
-  position: relative;
-  background: var(--ink);
-  overflow: hidden;
-  isolation: isolate;
-}
-.texture-panel::before {
-  content: '';
-  position: absolute; inset: 0;
-  background-image:
-    radial-gradient(circle at 20% 20%, rgba(140,106,63,0.35), transparent 55%),
-    radial-gradient(circle at 82% 78%, rgba(92,70,50,0.55), transparent 60%),
-    linear-gradient(155deg, #201b17 0%, #161311 45%, #0f0d0b 100%);
-}
-.texture-panel::after {
-  content: '';
-  position: absolute; inset: 0;
-  opacity: 0.5;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.28'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
-}
-.texture-panel .motif { position: absolute; z-index: 1; opacity: 0.9; }
-
-/* Real photography treatment — subtle tonal overlay so photos read as art-directed, not raw stock */
 .figure-photo { position: relative; overflow: hidden; background: var(--ink); }
 .figure-photo img {
   width: 100%; height: 100%; object-fit: cover; display: block;
   filter: saturate(0.92) contrast(1.03);
-  transition: transform 0.8s var(--ease);
+  transition: transform 1.1s var(--ease);
 }
 .figure-photo::after {
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(160deg, rgba(22,19,17,0.22) 0%, rgba(140,106,63,0.1) 55%, transparent 100%);
   mix-blend-mode: multiply;
 }
-.figure-photo:hover img { transform: scale(1.045); }
+.figure-photo:hover img { transform: scale(1.06); }
 
 .hero-media img {
   width: 100%; height: 100%; object-fit: cover; display: block;
   filter: saturate(0.85) contrast(1.05) brightness(0.92);
 }
-.texture-panel--bone {
-  background: var(--bone-dim);
-}
-.texture-panel--bone::before {
-  background-image:
-    radial-gradient(circle at 15% 15%, rgba(140,106,63,0.18), transparent 55%),
-    linear-gradient(155deg, #f2ead9 0%, #efe8d9 60%, #e6dcc4 100%);
-}
-.texture-panel--bone::after { opacity: 0.18; }
 
-/* Cornice-profile line motif (SVG, inline) */
-.motif-cornice {
-  position: absolute; right: 6%; bottom: 8%; width: 46%; max-width: 340px;
-  stroke: var(--brass-light); stroke-width: 1; fill: none; opacity: 0.55;
+/* Curtain-reveal for photography: an opaque curtain retracts over the photo on scroll-into-view,
+   paired with a slow settle scale on the image. Note: the reveal must NOT be done by clip-path
+   on the observed element itself — Chromium collapses an element's own intersection ratio to 0
+   when it is fully clip-path-hidden, so IntersectionObserver would never fire "visible". Instead
+   the curtain is a ::before overlay, leaving the observed element's own box unclipped. */
+.js .reveal-photo img { transform: scale(1.12); }
+.reveal-photo img {
+  transition: transform 1.4s var(--ease), filter 1.4s var(--ease);
 }
-.texture-panel--bone .motif-cornice { stroke: var(--brass); opacity: 0.4; }
+.js .reveal-photo::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 3;
+  background: var(--ink);
+  transform: scaleY(1);
+  transform-origin: bottom;
+  transition: transform 1.05s var(--ease);
+}
+.reveal-photo.is-visible::before { transform: scaleY(0); }
+.reveal-photo.is-visible img { transform: scale(1); }
+
+/* ---------------------------------------------------------------------
+   Scroll progress bar
+   --------------------------------------------------------------------- */
+.scroll-progress {
+  position: fixed; top: 0; left: 0; height: 2px; width: 100%;
+  z-index: 600; transform-origin: left; transform: scaleX(0);
+  background: var(--brass); pointer-events: none;
+}
+
+/* ---------------------------------------------------------------------
+   Hero heading reveal (pure CSS, no JS dependency)
+   --------------------------------------------------------------------- */
+@keyframes heading-reveal {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-reveal {
+  animation: heading-reveal 0.9s var(--ease) both;
+  animation-delay: 0.15s;
+}
+.hero-reveal + .hero-lede,
+.hero .eyebrow + .hero-reveal + * { animation-delay: 0.3s; }
+.hero .eyebrow { animation: heading-reveal 0.7s var(--ease) both; }
+.hero-lede { animation: heading-reveal 0.9s var(--ease) both; animation-delay: 0.32s; }
+.hero-actions { animation: heading-reveal 0.9s var(--ease) both; animation-delay: 0.46s; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-reveal, .hero .eyebrow, .hero-lede, .hero-actions { animation: none; }
+}
+
+/* ---------------------------------------------------------------------
+   Magnetic CTA (desktop pointer only, subtle pull toward cursor)
+   --------------------------------------------------------------------- */
+[data-magnetic] { transition: transform 0.35s var(--ease); will-change: transform; }
 
 /* ---------------------------------------------------------------------
    Marquee strip
@@ -430,6 +444,7 @@ body.nav-open { overflow: hidden; }
   gap: 3rem;
   animation: marquee 34s linear infinite;
 }
+.strip:hover .strip-track { animation-play-state: paused; }
 .strip-track span {
   font-family: var(--font-display);
   font-style: italic;
@@ -586,6 +601,17 @@ body.nav-open { overflow: hidden; }
 .carousel-arrows button:hover { background: var(--ink); border-color: var(--ink); }
 .carousel-arrows button:hover svg { stroke: var(--bone); }
 .carousel-arrows svg { width: 16px; height: 16px; stroke: var(--ink); transition: stroke 0.35s var(--ease); }
+
+.carousel-progress {
+  height: 1px; width: 100%; background: var(--bone-line); margin-top: 1.6rem;
+  position: relative; overflow: hidden;
+}
+.carousel-progress-bar {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  background: var(--brass); transform-origin: left; transform: scaleX(0);
+}
+.carousel-progress-bar.is-animating { animation: carousel-fill linear; }
+@keyframes carousel-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
 /* ---------------------------------------------------------------------
    Testimonial teaser (home)
