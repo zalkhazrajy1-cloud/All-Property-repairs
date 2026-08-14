@@ -70,6 +70,31 @@
   }, { passive: true });
   window.addEventListener('resize', updateProgress);
 
+  /* ---------------- Hero photo parallax (background layer only, small delta) ---------------- */
+  var heroMediaEls = document.querySelectorAll('.hero-media');
+  if (heroMediaEls.length && !reduceMotion) {
+    var parallaxTicking = false;
+    var updateParallax = function () {
+      heroMediaEls.forEach(function (el) {
+        var hero = el.closest('.hero');
+        if (!hero) return;
+        var rect = hero.getBoundingClientRect();
+        var progress = -rect.top / (rect.height || 1);
+        var offset = Math.max(-36, Math.min(36, progress * 36));
+        el.style.setProperty('--parallax-y', offset + 'px');
+      });
+      parallaxTicking = false;
+    };
+    updateParallax();
+    window.addEventListener('scroll', function () {
+      if (!parallaxTicking) {
+        window.requestAnimationFrame(updateParallax);
+        parallaxTicking = true;
+      }
+    }, { passive: true });
+    window.addEventListener('resize', updateParallax);
+  }
+
   /* ---------------- Animated stat counters ---------------- */
   var counters = document.querySelectorAll('[data-count-to]');
   if (counters.length) {
